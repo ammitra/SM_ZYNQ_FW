@@ -1,5 +1,11 @@
 APOLLO Service Module firmware
 
+Github branching policy:
+We are going to try to follow: https://nvie.com/posts/a-successful-git-branching-model/
+The default branch is develop and you should branch off of that.
+
+
+
 To Build FPGA FW:
   >make
   Ouput:
@@ -29,3 +35,6 @@ Organization:
   OS:
     ./os/hw contains device-tree elements and the xilinx hwdef files needed to build the PS system
     ./os/zynq_os_mods contains recipes for mods/patches for/of the petalinux system.
+
+Dependencies:
+	generation of xml regmaps requires the Jinja2 library for python

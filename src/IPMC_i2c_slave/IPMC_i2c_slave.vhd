@@ -7,6 +7,9 @@ use work.AXIRegPkg.all;
 
 use work.types.all;
 
+Library UNISIM;
+use UNISIM.vcomponents.all;
+
 entity IPMC_i2c_slave is
   
   port (
@@ -17,6 +20,8 @@ entity IPMC_i2c_slave is
     writeMOSI       : in  AXIWriteMOSI;
     writeMISO       : out AXIWriteMISO := DefaultAXIWriteMISO;
 
+    linux_booted    : out std_logic;
+    
     SDA_o           : out std_logic;
     SDA_t           : out std_logic;
     SDA_i           : in  std_logic;
@@ -163,22 +168,25 @@ begin  -- architecture behavioral
     if clk_axi'event and clk_axi = '1' then  -- rising clock edge 
       heart_beat <= '0';
       last_localAddress <= localAddress;
-      if (localAddress(13 downto 0) /= "10"&x"001" and
-          last_localAddress(13 downto 0) = "10"&x"001") then
+      if (localAddress(11 downto 0) /= x"7FF" and
+          last_localAddress(11 downto 0) = x"7FF") then
         heart_beat <= '1';
       end if;
     end if;
   end process hb_proc;
 
+  linux_booted <= not PS_is_shutdown;
+  
   counter_1: entity work.counter
     generic map (
       roll_over   => '0',
       end_value   => x"1DCD6500",
       start_value => x"00000000",
+      A_RST_CNT   => x"1DCD6500",
       DATA_WIDTH  => 32)
     port map (
       clk         => clk_axi,
-      reset_async => '0',
+      reset_async => reset,
       reset_sync  => heart_beat,
       enable      => '1',
       event       => '1',
