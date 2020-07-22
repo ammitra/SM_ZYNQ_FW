@@ -19,6 +19,7 @@ package CM_CTRL is
     OVERRIDE_PWR_GOOD          :std_logic;     -- Ignore power good from CM
     ERROR_STATE_RESET          :std_logic;     -- CM power is good
     ENABLE_PHY_CTRL            :std_logic;     -- phy_lane_control is enabled
+    ENABLE_LINK_CTRL           :std_logic;     -- phy_lane_control also considers link_good
     PHY_LANE_STABLE            :std_logic_vector(31 downto 0);  -- Contious phy_lane_up signals required to lock phylane control
     PHY_READ_TIME              :std_logic_vector(23 downto 0);  -- Time spent waiting for phylane to stabilize
   end record CM_CM_CTRL_CTRL_t;
@@ -30,6 +31,7 @@ package CM_CTRL is
                                                              PHY_LANE_STABLE => x"000000ff",
                                                              ENABLE_UC => '0',
                                                              OVERRIDE_PWR_GOOD => '0',
+                                                             ENABLE_LINK_CTRL => '1',
                                                              ENABLE_PWR => '0',
                                                              ERROR_STATE_RESET => '0'
                                                             );

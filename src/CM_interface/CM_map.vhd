@@ -77,6 +77,7 @@ begin  -- architecture behavioral
           localRdData( 9)            <=  Mon.CM(1).CTRL.PWR_ENABLED;                       --power is enabled
           localRdData(10)            <=  Mon.CM(1).CTRL.IOS_ENABLED;                       --IOs to CM are enabled
           localRdData(11)            <=  reg_data( 0)(11);                                 --phy_lane_control is enabled
+          localRdData(12)            <=  reg_data( 0)(12);                                 --phy_lane_control also considers link_good
         when 1 => --0x1
           localRdData(31 downto  0)  <=  reg_data( 1)(31 downto  0);                       --Contious phy_lane_up signals required to lock phylane control
         when 2 => --0x2
@@ -190,6 +191,7 @@ begin  -- architecture behavioral
           localRdData( 9)            <=  Mon.CM(2).CTRL.PWR_ENABLED;                       --power is enabled
           localRdData(10)            <=  Mon.CM(2).CTRL.IOS_ENABLED;                       --IOs to CM are enabled
           localRdData(11)            <=  reg_data(44)(11);                                 --phy_lane_control is enabled
+          localRdData(12)            <=  reg_data(44)(12);                                 --phy_lane_control also considers link_good
         when 45 => --0x2d
           localRdData(31 downto  0)  <=  reg_data(45)(31 downto  0);                       --Contious phy_lane_up signals required to lock phylane control
         when 46 => --0x2e
@@ -310,6 +312,7 @@ begin  -- architecture behavioral
   Ctrl.CM(1).CTRL.OVERRIDE_PWR_GOOD    <=  reg_data( 0)( 2);               
   Ctrl.CM(1).CTRL.ERROR_STATE_RESET    <=  reg_data( 0)( 8);               
   Ctrl.CM(1).CTRL.ENABLE_PHY_CTRL      <=  reg_data( 0)(11);               
+  Ctrl.CM(1).CTRL.ENABLE_LINK_CTRL     <=  reg_data( 0)(12);               
   Ctrl.CM(1).CTRL.PHY_READ_TIME        <=  reg_data( 2)(23 downto  0);     
   Ctrl.CM(1).CTRL.PHY_LANE_STABLE      <=  reg_data( 1)(31 downto  0);     
   Ctrl.CM(1).C2C.EYESCAN_TRIGGER       <=  reg_data(20)(23);               
@@ -347,6 +350,7 @@ begin  -- architecture behavioral
   Ctrl.CM(2).CTRL.OVERRIDE_PWR_GOOD    <=  reg_data(44)( 2);               
   Ctrl.CM(2).CTRL.ERROR_STATE_RESET    <=  reg_data(44)( 8);               
   Ctrl.CM(2).CTRL.ENABLE_PHY_CTRL      <=  reg_data(44)(11);               
+  Ctrl.CM(2).CTRL.ENABLE_LINK_CTRL     <=  reg_data(44)(12);               
   Ctrl.CM(2).CTRL.PHY_READ_TIME        <=  reg_data(46)(23 downto  0);     
   Ctrl.CM(2).CTRL.PHY_LANE_STABLE      <=  reg_data(45)(31 downto  0);     
   Ctrl.CM(2).C2C.EYESCAN_TRIGGER       <=  reg_data(64)(23);               
@@ -389,6 +393,7 @@ begin  -- architecture behavioral
       reg_data( 0)( 2)  <= DEFAULT_CM_CTRL_t.CM(1).CTRL.OVERRIDE_PWR_GOOD;
       reg_data( 0)( 8)  <= DEFAULT_CM_CTRL_t.CM(1).CTRL.ERROR_STATE_RESET;
       reg_data( 0)(11)  <= DEFAULT_CM_CTRL_t.CM(1).CTRL.ENABLE_PHY_CTRL;
+      reg_data( 0)(12)  <= DEFAULT_CM_CTRL_t.CM(1).CTRL.ENABLE_LINK_CTRL;
       reg_data( 2)(23 downto  0)  <= DEFAULT_CM_CTRL_t.CM(1).CTRL.PHY_READ_TIME;
       reg_data( 1)(31 downto  0)  <= DEFAULT_CM_CTRL_t.CM(1).CTRL.PHY_LANE_STABLE;
       reg_data(20)(23)  <= DEFAULT_CM_CTRL_t.CM(1).C2C.EYESCAN_TRIGGER;
@@ -426,6 +431,7 @@ begin  -- architecture behavioral
       reg_data(44)( 2)  <= DEFAULT_CM_CTRL_t.CM(2).CTRL.OVERRIDE_PWR_GOOD;
       reg_data(44)( 8)  <= DEFAULT_CM_CTRL_t.CM(2).CTRL.ERROR_STATE_RESET;
       reg_data(44)(11)  <= DEFAULT_CM_CTRL_t.CM(2).CTRL.ENABLE_PHY_CTRL;
+      reg_data(44)(12)  <= DEFAULT_CM_CTRL_t.CM(2).CTRL.ENABLE_LINK_CTRL;
       reg_data(46)(23 downto  0)  <= DEFAULT_CM_CTRL_t.CM(2).CTRL.PHY_READ_TIME;
       reg_data(45)(31 downto  0)  <= DEFAULT_CM_CTRL_t.CM(2).CTRL.PHY_LANE_STABLE;
       reg_data(64)(23)  <= DEFAULT_CM_CTRL_t.CM(2).C2C.EYESCAN_TRIGGER;
@@ -473,6 +479,7 @@ begin  -- architecture behavioral
           reg_data( 0)( 2)                   <=  localWrData( 2);                --Ignore power good from CM
           reg_data( 0)( 8)                   <=  localWrData( 8);                --CM power is good
           reg_data( 0)(11)                   <=  localWrData(11);                --phy_lane_control is enabled
+          reg_data( 0)(12)                   <=  localWrData(12);                --phy_lane_control also considers link_good
         when 1 => --0x1
           reg_data( 1)(31 downto  0)         <=  localWrData(31 downto  0);      --Contious phy_lane_up signals required to lock phylane control
         when 2 => --0x2
@@ -521,6 +528,7 @@ begin  -- architecture behavioral
           reg_data(44)( 2)                   <=  localWrData( 2);                --Ignore power good from CM
           reg_data(44)( 8)                   <=  localWrData( 8);                --CM power is good
           reg_data(44)(11)                   <=  localWrData(11);                --phy_lane_control is enabled
+          reg_data(44)(12)                   <=  localWrData(12);                --phy_lane_control also considers link_good
         when 45 => --0x2d
           reg_data(45)(31 downto  0)         <=  localWrData(31 downto  0);      --Contious phy_lane_up signals required to lock phylane control
         when 46 => --0x2e

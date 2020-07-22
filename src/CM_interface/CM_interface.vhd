@@ -67,7 +67,8 @@ architecture behavioral of CM_intf is
   signal phylanelock     : std_logic_vector(1 downto 0);
   signal aurora_init_buf : std_logic_vector(1 downto 0);
   signal phycontrol_en   : std_logic_vector(1 downto 0);
-    
+  signal phylanemix      : std_logic_vector(3 downto 0);
+  
   signal reset : std_logic;                     
 
   signal mon_active : slv_2_t;
@@ -200,17 +201,21 @@ begin
     -------------------------------------------------------------------------------
     -- Phy_lane_control
     -------------------------------------------------------------------------------
+    phylanemix(2*(iCM-1)) <= (not CTRL.CM(iCM).CTRL.ENABLE_PHY_CTRL) or (CTRL.CM(iCM).CTRL.ENABLE_PHY_CTRL and CM_C2C_Mon.CM(iCM).PHY_LANE_UP(0));
+    --(1,0) (2,2)
+    phylanemix((2*iCM)-1) <= (not CTRL.CM(iCM).CTRL.ENABLE_LINK_CTRL) or (CTRL.CM(iCM).CTRL.ENABLE_LINK_CTRL and Mon.CM(iCM).C2C.LINK_GOOD);
+    --(1,1) (2,3) 
     Phy_lane_control_X: entity work.CM_phy_lane_control
       generic map (
         CLKFREQ          => CLKFREQ,
         DATA_WIDTH       => DATA_WIDTH,
-        ERROR_WAIT_TIME => ERROR_WAIT_TIME)
+        ERROR_WAIT_TIME  => ERROR_WAIT_TIME)
       port map (
         clk              => clk_axi,
         reset            => reset,
         reset_counter    => CTRL.CM(iCM).C2C.CNT.RESET_COUNTERS,
         enable           => phycontrol_en(iCM - 1),
-        phy_lane_up      => CM_C2C_Mon.CM(iCM).phy_lane_up(0),
+        phy_lane_up      => (phylanemix(2*(iCM-1)) and phylanemix((2*iCM)-1)), --CM_C2C_Mon.CM(iCM).phy_lane_up(0),
         phy_lane_stable  => CTRL.CM(iCM).CTRL.PHY_LANE_STABLE,
         READ_TIME        => CTRL.CM(iCM).CTRL.PHY_READ_TIME,
         initialize_out   => aurora_init_buf(iCM - 1),
