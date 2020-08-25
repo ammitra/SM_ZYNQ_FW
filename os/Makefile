@@ -65,8 +65,9 @@ include mk/Monitoring.mk
 
 include mk/CM_MCU.mk
 
+include mk/ApolloHerd.mk
 
-finalize_image: ${ETC_PATH}/group ${ETC_PATH}/gshadow ${ETC_PATH}/passwd ${ETC_PATH}/shadow  ${OPT_PATH}/BUTool ${HOME_PATH}/cms ${HOME_PATH}/atlas ${OPT_PATH}/mcu_tools ${OPT_PATH}/Graphite_Monitor
+finalize_image: ${ETC_PATH}/group ${ETC_PATH}/gshadow ${ETC_PATH}/passwd ${ETC_PATH}/shadow  ${OPT_PATH}/BUTool ${HOME_PATH}/cms ${HOME_PATH}/atlas ${OPT_PATH}/mcu_tools ${OPT_PATH}/Graphite_Monitor ${OPT_PATH}/ApolloHerd
 #	sudo rm -rf ${INSTALL_PATH}/usr/share/doc
 	sudo cp ${MODS_PATH}/cleanup_locale.sh ${TMP_PATH}
 	sudo chroot ${INSTALL_PATH} ${QEMU_PATH}/${QEMU} /bin/bash /tmp/cleanup_locale.sh
